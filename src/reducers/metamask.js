@@ -1,7 +1,6 @@
 const initialState = {
     web3Enable: false,
     networkID: '',
-    accounts: [],
     currentAccount: ''
 };
 

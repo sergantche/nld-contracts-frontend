@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 
 import metamask from './metamask';
-//import playlists from './playlists';
+import addresses from './addresses';
 //import filterTracks from './filterTracks';
 
 export default combineReducers({
-    metamask
+    metamask,
+    addresses
 })

@@ -54,3 +54,4 @@ packages/
 /public/manifest.json
 /public/favicon.ico
 /README.md
+/package-lock.json

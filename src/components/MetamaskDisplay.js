@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
   web3Enable: state.metamask.web3Enable,
   networkID: state.metamask.networkID,
   currentAccount: state.metamask.currentAccount,
-  accounts: state.metamask.accounts
+  addresses: state.addresses.addresses
 });
 
 const MapDispatchToProps = (dispatch) => ({
@@ -22,6 +22,13 @@ const MapDispatchToProps = (dispatch) => ({
   },
   networkUpdate: (payload) => {
     dispatch({ type: 'NETWORK_UPDATE', payload });
+  },
+  addAddress: (addr) => {
+    const payload = {
+      name: 'metamask account',
+      address: addr
+    }
+    dispatch({ type: 'ADD_ADDR', payload });
   }
 });
 
@@ -54,6 +61,9 @@ class MetamaskDisplay extends Component {
     web3.eth.getAccounts().then( (accounts) => {
       if (accounts[0] !== this.props.currentAccount)
         this.props.accountUpdate(accounts[0]);
+        if(!this.props.addresses.includes(accounts[0])) {
+          this.props.addAddress(accounts[0]);
+        }
     });
   }
 
