@@ -4,7 +4,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import './css/AddressesDisplay.css';
 import Web3 from 'web3'
-import { myAddresses } from './constants'
+import { myAddresses } from '../constants'
 
 const web3 = new Web3(global.web3.currentProvider);
 
@@ -74,7 +74,7 @@ class AddressesDisplay extends Component {
   render() {
     return (
       <div className="AddressesDisplay">
-        <button onClick={this.useDefaultAddresses}>MyAddr</button>
+        <button onClick={this.useDefaultAddresses}>My Addresses</button>
         <div>
           <input
             type="text"
@@ -94,7 +94,8 @@ class AddressesDisplay extends Component {
         <ul>
           {this.props.addresses.map((address, index) =>
             <li key={index}>
-              {this.props.names[index]} {address} {}
+              {index}: {this.props.names[index]}
+              <span>{address}</span>
               <CopyToClipboard text={address}>
                 <button>Copy</button>
               </CopyToClipboard>

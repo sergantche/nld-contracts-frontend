@@ -42,6 +42,8 @@ class MetamaskDisplay extends Component {
 
   componentDidMount() {
     this.checkWeb3Status();
+    this.getCurrentAccount();
+    this.getNetwork();
   }
 
   checkWeb3Status() {
@@ -53,10 +55,10 @@ class MetamaskDisplay extends Component {
   }
 
   getCurrentAccount() {
-    if (!this.props.web3Enable) {
-      console.log('web3 obect not defined');
-      return;
-    }
+    // if (!this.props.web3Enable) {
+    //   console.log('web3 object not defined');
+    //   return;
+    // }
     // Get the current account from metamask
     web3.eth.getAccounts().then( (accounts) => {
       if (accounts[0] !== this.props.currentAccount)
@@ -68,19 +70,17 @@ class MetamaskDisplay extends Component {
   }
 
   getNetwork() {
-    if (!this.props.web3Enable) {
-      console.log('web3 obect not defined');
-      return;
-    }
+    // if (!this.props.web3Enable) {
+    //   console.log('web3 object not defined');
+    //   return;
+    // }
 
     // Get the network
     web3.eth.net.getId( (err,res) => {
       this.props.networkUpdate(res);
     });
   }
-  
-
-  
+    
   render() {
     var network_description = '';
     if (this.props.networkID) {
@@ -119,7 +119,7 @@ class MetamaskDisplay extends Component {
           Get Account
         </button>
         Account:
-        {this.props.currentAccount}
+        <span>{this.props.currentAccount}</span>
       </div>
       <div>
         Network ID:

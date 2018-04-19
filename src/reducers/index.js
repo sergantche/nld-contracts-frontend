@@ -2,9 +2,10 @@ import { combineReducers } from 'redux';
 
 import metamask from './metamask';
 import addresses from './addresses';
-//import filterTracks from './filterTracks';
+import nulandToken from './nulandToken';
 
 export default combineReducers({
     metamask,
-    addresses
+    addresses,
+    nulandToken
 })

@@ -1,5 +1,18 @@
 .MetamaskDisplay {
-    background: gray;
+    background: rgb(194, 194, 194);
     margin: 5px;
     padding: 5px;
+    font-size: 14px;
+    font-weight: 400;
+}
+.MetamaskDisplay > div {
+    margin-bottom: 5px;
+}
+
+.MetamaskDisplay span {
+    background: rgb(255, 255, 255);
+    color: rgb(9, 48, 131);
+    font-size: 12px;
+    font-style: italic;
+    margin: 5px;
 }

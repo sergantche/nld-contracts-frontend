@@ -1,5 +1,39 @@
 .AddressesDisplay {
-    background: rgb(67, 86, 148);
+    background: rgb(180, 197, 255);
     margin: 5px;
     padding: 5px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.AddressesDisplay > div {
+    margin-bottom: 10px;
+}
+
+.AddressesDisplay input {
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.AddressesDisplay span {
+    background: rgb(255, 255, 255);
+    color: rgb(9, 48, 131);
+    display: inline-block;
+    width: 320px;
+    font-size: 12px;
+    font-style: italic;
+    margin: 5px;
+    padding-left: 10px;
+    margin-right: 8px;
+}
+
+.AddressesDisplay li {
+    margin-bottom: 4px;
+}
+
+.AddressesDisplay li button {
+    background-color: rgb(2, 53, 163);
+    font-size: 10px;
+    line-height: 1.5;
+    border-radius: 3px;
 }
