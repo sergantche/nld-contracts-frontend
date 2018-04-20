@@ -6,7 +6,13 @@ import Web3 from 'web3'
 import { tokenContract } from '../constants'
 
 const web3 = new Web3(global.web3.currentProvider);
-const contractNLD = new web3.eth.Contract(tokenContract.abi, tokenContract.address);
+const contractNLD = new web3.eth.Contract(
+  tokenContract.abi,
+  tokenContract.address,
+  {
+    gasPrice: tokenContract.gasPrice
+  }
+);
 
 const mapStateToProps = (state) => ({
     currentAddress: state.metamask.currentAccount,
@@ -40,6 +46,16 @@ const MapDispatchToProps = (dispatch) => ({
         allowance: allowance
       }
       dispatch({ type: 'UPD_AllOWANCE', payload });      
+    },
+    onNewTransaction: (hash) => {
+      const payload = {
+        hash: hash,
+        status: 'pending'
+      }
+      dispatch({ type: 'ADD_TRAN', payload });
+    },
+    onConfirmTransaction: (payload) => {
+      dispatch({ type: 'UPD_TRAN', payload });
     }
 });
 
@@ -123,7 +139,7 @@ class NulandToken extends Component {
     }
   }
 
-  // fropdownN starts from 0 : 0, 1, 2 and so on
+  // DropdownN starts from 0 : 0, 1, 2 and so on
   choseUnitNLD(units, dropdownID) {
     let newUnits = 'NLD';
     switch (units) {
@@ -150,19 +166,32 @@ class NulandToken extends Component {
     }
   }
 
-  // contract API functions
   sendEther() {
+    if(!web3.utils.isAddress(this.toInputETH.value)) {
+      console.log('bad address', this.toInputETH.value);
+      return;
+    }
     web3.eth.defaultAccount = this.props.currentAddress;
     web3.eth.sendTransaction({
       to: this.toInputETH.value,
-      value: web3.utils.toWei(this.valueInputETH.value)
-    }).then((receipt) => {
-      console.log(receipt);
+      value: web3.utils.toWei(this.valueInputETH.value),
+      gasPrice: tokenContract.gasPrice
+    }).on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'ether transfer'
+      })
     });
     this.toInputETH.value = formDefaultValue.to;
-    this.valueInputETH.value = formDefaultValue.value
+    this.valueInputETH.value = formDefaultValue.value;
   }
 
+  // contract API functions
   sendNLD() {
     // Check the address is correct first
     if(!web3.utils.isAddress(this.toInputNLD.value)) {
@@ -173,9 +202,17 @@ class NulandToken extends Component {
     contractNLD.methods.transfer(
       this.toInputNLD.value,
       web3.utils.toWei(this.valueInputNLD.value)
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'NLD transfer'
+      })
     });
     this.toInputNLD.value = formDefaultValue.to;
     this.valueInputNLD.value = formDefaultValue.valueNLD;
@@ -184,16 +221,24 @@ class NulandToken extends Component {
   approve() {
     // Check the address is correct first
     if(!web3.utils.isAddress(this.toInputNLD.value)) {
-      console.log('bad address');
+      console.log('bad address: ', this.toInputNLD.value);
       return;
     }
     // Call transfer method
     contractNLD.methods.approve(
       this.toInputNLD.value,
       web3.utils.toWei(this.valueInputNLD.value)
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'NLD approve'
+      })
     });
     this.toInputNLD.value = formDefaultValue.to;
     this.valueInputNLD.value = formDefaultValue.valueNLD;
@@ -209,9 +254,17 @@ class NulandToken extends Component {
     contractNLD.methods.increaseApproval(
       this.toInputNLD.value,
       web3.utils.toWei(this.valueInputNLD.value)
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'increase allowance'
+      })
     });
     this.toInputNLD.value = formDefaultValue.to;
     this.valueInputNLD.value = formDefaultValue.valueNLD;
@@ -227,9 +280,17 @@ class NulandToken extends Component {
     contractNLD.methods.decreaseApproval(
       this.toInputNLD.value,
       web3.utils.toWei(this.valueInputNLD.value)
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'decrease allowance'
+      })
     });
     this.toInputNLD.value = formDefaultValue.to;
     this.valueInputNLD.value = formDefaultValue.valueNLD;
@@ -247,9 +308,17 @@ class NulandToken extends Component {
       this.fromInputNLD2.value,
       this.toInputNLD2.value,
       web3.utils.toWei(this.valueInputNLD2.value)
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'NLD transfer from'
+      })
     });
     this.fromInputNLD2.value = formDefaultValue.from;
     this.toInputNLD2.value = formDefaultValue.to;
@@ -265,9 +334,17 @@ class NulandToken extends Component {
     // Call transfer method
     contractNLD.methods.transferAll(
       this.toInputNLD2.value
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'NLD transfer all'
+      })
     });
     this.fromInputNLD2.value = formDefaultValue.from;
     this.toInputNLD2.value = formDefaultValue.to;
@@ -285,9 +362,17 @@ class NulandToken extends Component {
     contractNLD.methods.transferAllFrom(
       this.fromInputNLD2.value,
       this.toInputNLD2.value
-    ).send({ from: this.props.currentAddress, gasPrice: '2000000000' })
-    .then((receipt) => {
-      console.log(receipt);
+    ).send({ from: this.props.currentAddress })
+    .on('transactionHash', (transactionHash) => { this.props.onNewTransaction(transactionHash) })
+    .on('receipt', (receipt) => {
+      this.props.onConfirmTransaction({
+        hash: receipt.transactionHash,
+        status: 'accepted',
+        from: receipt.from,
+        to: receipt.to,
+        block: receipt.blockNumber,
+        method: 'NLD transfer all from'
+      })
     });
     this.fromInputNLD2.value = formDefaultValue.from;
     this.toInputNLD2.value = formDefaultValue.to;

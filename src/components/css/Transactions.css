@@ -1,0 +1,48 @@
+.Transactions {
+    background: rgb(255, 255, 255);
+    margin: 5px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid gray;
+}
+
+div.Transactions {
+    padding:10px;
+}
+
+.Transactions ul {
+    padding-left: 20px;
+}
+
+.Transactions a {
+    text-align: center;
+    display: inline-block;
+    width: 110px;
+}
+
+.Transactions .status {
+    color: rgb(18, 89, 182);
+    display: inline-block;
+    width: 80px;
+    text-align: center;
+    font-style: oblique;
+}
+
+.Transactions span span {
+    display: inline-block;
+    width: 150px;
+    text-align: center;
+    margin: 4px;
+}
+
+.Transactions .implication-sign {
+    color: rgb(18, 89, 182);
+    width: 20px;
+    font-size: 12pt;
+    margin: 0;
+}
+
+.Transactions .block-number {
+    width: 80px;
+}
